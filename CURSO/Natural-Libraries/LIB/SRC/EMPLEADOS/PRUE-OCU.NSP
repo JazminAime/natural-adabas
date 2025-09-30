@@ -1,0 +1,36 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMP VIEW OF EMPLOYEES
+  2 ID-EMPLEADO
+  2 INGRESO-ANUAL
+      3 CODIGO-MONEDA        (1:20)
+      3 SALARIO-ANUAL        (1:20)
+      
+ 1 #ID-EMPLEADO              (A08)
+ 1 #I                        (N2)
+END-DEFINE
+
+  INPUT 'INGRESE EMPLEADO: ' #ID-EMPLEADO
+    IF #ID-EMPLEADO <> MASK(99999999)
+        REINPUT 'INGRESE SOLO VALORES NUMERICOS'
+    END-IF
+
+  F1. FIND VISTA-EMP WITH ID-EMPLEADO = #ID-EMPLEADO
+        IF NO RECORDS FOUND
+            WRITE 'NO HAY REGISTROS'
+            ESCAPE BOTTOM
+        END-NOREC
+                
+        WRITE 'ID-EMPLEADO: ' VISTA-EMP.ID-EMPLEADO
+
+    FOR #I = 1 TO 20
+        WRITE 'OCURRENCIA: ' #I
+              'CODIGO MONEDA: ' VISTA-EMP.CODIGO-MONEDA(#I)
+              'SALARIO ANUAL: ' VISTA-EMP.SALARIO-ANUAL(#I)
+    END-FOR
+  END-FIND
+    
+END

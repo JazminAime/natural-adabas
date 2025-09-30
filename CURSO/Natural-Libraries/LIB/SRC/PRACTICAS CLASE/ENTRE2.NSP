@@ -1,0 +1,39 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL 
+    01 #VEC1 (N2/5)
+    01 #I (N2)
+    01 #CERO (N2)
+    01 #UNOTREINTA (N2)
+    01 #TREINTANOVNUEVE (N2)
+END-DEFINE
+ 
+#VEC1(1) := 55
+#VEC1(2) := 2
+#VEC1(3) := 88
+#VEC1(4) := 22
+#VEC1(5) := 0
+ 
+FOR #I = 1 TO 5 
+
+    IF #VEC1(#I) EQ 0
+        ADD 1 TO #CERO
+    END-IF
+
+    IF #VEC1(#I) GE 1 AND #VEC1(#I) LE 30
+        ADD 1 TO #UNOTREINTA
+    END-IF
+
+    IF #VEC1(#I) GE 31 AND #VEC1(#I) LE 99
+        ADD 1 TO #TREINTANOVNUEVE
+    END-IF
+
+END-FOR
+ 
+WRITE 'CANTIDAD DE CEROS:       ' #CERO
+WRITE 'ENTRE 1 Y 30:            ' #UNOTREINTA
+WRITE 'ENTRE 31 Y 99:           ' #TREINTANOVNUEVE
+ 
+END

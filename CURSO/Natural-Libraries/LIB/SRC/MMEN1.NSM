@@ -1,0 +1,52 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+* MAP2: PROTOTYPE VERSION 820 --- CREATED BY ONE 9.3.1 ---
+* INPUT USING MAP 'XXXXXXXX'
+*     #M-OPCION
+DEFINE DATA PARAMETER
+1 #M-OPCION (N01.0)
+END-DEFINE
+FORMAT PS=024 LS=080 ZP=OFF SG=OFF KD=OFF IP=OFF
+* MAP2: MAP PROFILES *****************************        200***********
+* .TTAAAMMOO   D I D I N D I D I        ?_)^&:+(                       *
+* 024079        N0NNUCN             X        01 SYSPROF NR             *
+************************************************************************
+INPUT          (     IP=OFF                                           /*
+                                                                       )
+/
+ 005T 'MENU PRINCIPAL - EMPLEADOS'
+/
+/
+/
+ 005T '1- CONSULTAR'
+/
+/
+ 005T '2- ACTUALIZAR'
+/
+/
+ 005T '3- ELIMINAR MONEDA'
+/
+/
+ 005T '4- ALTA MONEDA'
+/
+/
+ 005T '5- ALTA DEPARTAMENTO'
+/
+/
+/
+ 032T #M-OPCION /*.99U011 N01.0.
+      (AD=MDT NL=11.0 )
+/
+/
+/
+ 005T 'ENTER-VALIDAR'
+/
+/
+/
+/
+/
+* MAP2: VALIDATION *****************************************************
+* MAP2: END OF MAP *****************************************************
+END

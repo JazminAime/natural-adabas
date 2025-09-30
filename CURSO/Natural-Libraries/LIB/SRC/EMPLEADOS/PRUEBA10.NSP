@@ -1,0 +1,151 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMP VIEW OF EMPLOYEES
+  2 ID-EMPLEADO
+  2 NOMBRE
+  2 APELLIDO
+  2 ESTADO-CIVIL
+  2 SEXO
+  2 INGRESO-ANUAL
+      3 CODIGO-MONEDA        (1:20) /* A3
+      3 SALARIO-ANUAL        (1:20) /* P9
+      3 BONUS                (1:20, 1:20)
+
+1 #ID-EMPLEADO       (A08)
+1 #APELLIDO          (A20)
+1 #ESTADO            (A01)
+1 #SEXO              (A01)
+1 #CONF              (A01)
+1 #MONEDA-1          (A03)
+1 #SALARIO-1         (P09)    
+1 #MONEDA-2          (A03)
+1 #SALARIO-2         (P09)
+1 #MONEDA-3          (A03)
+1 #SALARIO-3         (P09)
+1 #I                 (N2)
+1 #OCU               (N2)
+
+END-DEFINE
+
+DEFINE WINDOW AVISO
+    SIZE 7 * 50
+    BASE 10 / 30
+    FRAMED 
+
+/******** CUERPO PRINCIPAL DEL PROGRAMA ********/
+REPEAT
+    PERFORM BUSCAR-EMP
+    PERFORM PROCESO
+END-REPEAT
+
+/******** SUBRUTINAS ********/
+
+/***************************/
+DEFINE SUBROUTINE BUSCAR-EMP
+/***************************/
+
+INPUT 'INGRESE EMPLEADO: ' #ID-EMPLEADO
+
+IF #ID-EMPLEADO <> MASK(99999999)
+    SET WINDOW 'AVISO'
+    REINPUT 'INGRESE SOLO VALORES NUMERICOS'
+    SET WINDOW OFF
+END-IF
+
+END-SUBROUTINE
+
+/************************/
+DEFINE SUBROUTINE PROCESO
+/************************/
+
+F1. FIND VISTA-EMP WITH ID-EMPLEADO = #ID-EMPLEADO
+
+    IF NO RECORDS FOUND
+        WRITE 'NO HAY REGISTROS'
+        ESCAPE BOTTOM
+    END-NOREC
+    
+    PERFORM ARRAY
+        
+    MOVE VISTA-EMP.APELLIDO TO #APELLIDO
+    MOVE VISTA-EMP.ESTADO-CIVIL TO #ESTADO
+    MOVE VISTA-EMP.SEXO TO #SEXO
+    MOVE VISTA-EMP.CODIGO-MONEDA(1) TO #MONEDA-1
+    MOVE VISTA-EMP.SALARIO-ANUAL(1) TO #SALARIO-1
+    MOVE VISTA-EMP.CODIGO-MONEDA(2) TO #MONEDA-2
+    MOVE VISTA-EMP.SALARIO-ANUAL(2) TO #SALARIO-2
+    MOVE VISTA-EMP.CODIGO-MONEDA(3) TO #MONEDA-3
+    MOVE VISTA-EMP.SALARIO-ANUAL(3) TO #SALARIO-3
+        
+     INPUT
+        'ID.............  '              #ID-EMPLEADO                 (AD=O) /
+        'APELLIDO......  .'              #APELLIDO                    (AD=M) /
+        'ESTADO CIVIL.  ..'              #ESTADO                      (AD=M) /
+        'SEXO...........  '              #SEXO                        (AD=M) /
+        'CODIGO MONEDA 1..'              #MONEDA-1                    (AD=M) /
+        'SALARIO ANUAL 1..'              #SALARIO-1                   (AD=M) /
+        'CODIGO MONEDA 2..'              #MONEDA-2                    (AD=M) /
+        'SALARIO ANUAL 2..'              #SALARIO-2                   (AD=M) /
+        'CODIGO MONEDA 3..'              #MONEDA-3                    (AD=M) /
+        'SALARIO ANUAL 3..'              #SALARIO-3                   (AD=M) /
+        'OCURRENCIA VACIA.'              #OCU                         (AD=O)
+     
+     IF NOT (#ESTADO = 'M' OR = 'S' OR = 'D' OR = 'W')
+         REINPUT 'EL VALOR INGRESADO NO ES VALIDO'
+     END-IF
+     
+     IF NOT (#SEXO = 'M' OR = 'F')
+         REINPUT 'EL VALOR INGRESADO NO ES VALIDO'
+     END-IF
+     
+     /*INPUT NO ERASE
+     /*// 30T '/////////////////////////////////////////'          
+     /*// 30T '¿DESEA CONFIRMAR LA ACTUALIZACION? (S/N):' #CONF
+     /*// 30T '/////////////////////////////////////////'
+     
+     SET WINDOW 'AVISO'
+         INPUT / '¿DESEA CONFIRMAR LA ACTUALIZACION? (S/N):' #CONF
+     SET WINDOW OFF
+     
+     IF #CONF = 'S' OR #CONF = 's'
+         MOVE #APELLIDO TO VISTA-EMP.APELLIDO
+         MOVE #ESTADO TO VISTA-EMP.ESTADO-CIVIL
+         MOVE #SEXO TO VISTA-EMP.SEXO
+         MOVE #MONEDA-1 TO VISTA-EMP.CODIGO-MONEDA(1)
+         MOVE #SALARIO-1 TO VISTA-EMP.SALARIO-ANUAL(1)
+         MOVE #MONEDA-2 TO VISTA-EMP.CODIGO-MONEDA(2)
+         MOVE #SALARIO-2 TO VISTA-EMP.SALARIO-ANUAL(2)
+         MOVE #MONEDA-3 TO VISTA-EMP.CODIGO-MONEDA(3)
+         MOVE #SALARIO-3 TO VISTA-EMP.SALARIO-ANUAL(3)
+             UPDATE (F1.)
+         END TRANSACTION
+         WRITE 'EL REGISTRO SE HA ACTUALIZADO'
+    ELSE 
+        WRITE 'EL REGISTRO NO SE HA ACTUALIZADO'
+    END-IF
+     
+END-FIND
+
+/*IF *COUNTER(F1.) = 0
+    /*WRITE 'NO ENCONTRO REGISTROS'
+/*END-IF
+
+END-SUBROUTINE
+
+/**********************/
+DEFINE SUBROUTINE ARRAY
+/**********************/
+
+FOR #I = 1 TO 20
+        IF VISTA-EMP.SALARIO-ANUAL(#I) = 0
+            MOVE #I TO #OCU
+            ESCAPE BOTTOM
+        END-IF
+    END-FOR
+END-SUBROUTINE
+
+END
+

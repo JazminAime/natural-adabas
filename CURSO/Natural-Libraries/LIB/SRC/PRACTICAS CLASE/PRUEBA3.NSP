@@ -1,0 +1,33 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL 
+  01 #A        (N4)
+  01 #B        (N4)
+  01 #C        (N4)
+  01 #SUMA     (N4)
+  01 #ACUM     (N4)
+END-DEFINE
+
+#ACUM := 0
+
+REPEAT
+    INPUT 'Ingrese valor 1: ' #A
+    INPUT 'Ingrese valor 2: ' #B
+    INPUT 'Ingrese valor 3: ' #C
+    
+    ADD #A #B #C GIVING #SUMA
+    
+    ADD #SUMA TO #ACUM
+    
+    WRITE 'Suma de los 3: ' #SUMA
+    WRITE 'Acumulador total: ' #ACUM
+    
+    IF #ACUM > 2000
+        WRITE 'El acumulador superó 2000. Fin del programa.'
+        ESCAPE BOTTOM
+    END-IF
+END-REPEAT
+
+END

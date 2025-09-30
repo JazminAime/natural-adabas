@@ -1,0 +1,36 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+    1 #OPCION (N01.0)
+END-DEFINE
+*
+SET KEY ALL
+*
+INPUT USING MAP  'M-EMP'
+*
+IF *PF-KEY EQ 'ENTR'
+    DECIDE ON FIRST VALUE OF #OPCION 
+        VALUE 1 
+            WRITE 'ALTA EMPLEADOS'
+        VALUE 2
+            WRITE 'BAJA EMPLEADOS'
+        VALUE 3
+            FETCH 'PRUEBA10'
+        VALUE 4
+            FETCH 'CONSULT2'
+        NONE VALUE
+            REINPUT 'OPCION INVALIDA'
+    END-DECIDE
+END-IF
+*
+IF *PF-KEY = 'PF3'
+    STOP  
+END-IF
+*
+IF *PF-KEY = 'PF5'
+    FETCH 'MENUP' 
+END-IF
+*
+END

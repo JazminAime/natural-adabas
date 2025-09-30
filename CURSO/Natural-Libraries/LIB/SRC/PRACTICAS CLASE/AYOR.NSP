@@ -1,0 +1,27 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+ 01 #VEC1 (N2/5)
+ 01 #I (N2)
+ 01 #AUX (N2)
+END-DEFINE 
+
+#VEC1 (1) := 15
+#VEC1 (2) := 20
+#VEC1 (3) := 8
+#VEC1 (4) := 77
+#VEC1 (5) := 3
+
+#AUX := #VEC1(1)
+
+FOR #I = 1 TO 5 
+    IF #VEC1(#I) < #AUX
+        #AUX := #VEC1(#I)
+    END-IF
+END-FOR
+
+WRITE 'MENOR VALOR:' #AUX
+
+END

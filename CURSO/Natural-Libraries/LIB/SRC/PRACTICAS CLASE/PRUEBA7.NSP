@@ -1,0 +1,25 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+    01 #VECTOR        (N7/5)
+    01 #I            (N2)
+    01 #PROMEDIO    (N7.2)
+    01 #SUMA        (N7)
+END-DEFINE
+
+FOR #I 1 TO 5
+    INPUT 'Ingrese valor' #I(AD=O)':' #VECTOR(#I)
+    IF #VECTOR(#I) >= 10000 OR #VECTOR(#I) <= 0
+        WRITE 'Solo se aceptan valores mayores a 0 y menores a 10000'
+        STOP
+    END-IF
+    ADD #VECTOR(#I) TO #SUMA
+END-FOR
+
+COMPUTE #PROMEDIO = #SUMA / 5
+
+WRITE 'El promedio de los valores ingresados es:' #PROMEDIO
+
+END

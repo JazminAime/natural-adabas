@@ -1,0 +1,79 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMP VIEW OF EMPLOYEES
+  2 ID-EMPLEADO
+  2 NOMBRE
+  2 APELLIDO
+  2 ESTADO-CIVIL
+  2 SEXO
+
+1 #ID-EMPLEADO       (A08)
+1 #APELLIDO          (A20)
+1 #ESTADO            (A01)
+1 #SEXO              (A01)
+1 #CONF              (A01)
+
+END-DEFINE
+
+INPUT 'INGRESE EMPLEADO: ' #ID-EMPLEADO
+
+IF #ID-EMPLEADO <> MASK(99999999)
+    REINPUT 'INGRESE SOLO VALORES NUMERICOS'
+END-IF
+
+PERFORM BUSCAR-EMP
+*
+*
+*
+*
+***************************************************
+DEFINE SUBROUTINE BUSCAR-EMP
+
+F1. FIND VISTA-EMP WITH ID-EMPLEADO = #ID-EMPLEADO
+
+    MOVE VISTA-EMP.APELLIDO TO #APELLIDO
+    MOVE VISTA-EMP.ESTADO-CIVIL TO #ESTADO
+    MOVE VISTA-EMP.SEXO TO #SEXO
+        
+     INPUT
+        'ID'            #ID-EMPLEADO                 (AD=O)
+        'APE'           #APELLIDO                    (AD=M)
+        'EST'           #ESTADO                      (AD=M)
+        'SEXO'          #SEXO                        (AD=M)
+     
+     IF NOT (#ESTADO = 'M' OR = 'S' OR = 'D' OR = 'W')
+         REINPUT 'EL VALOR INGRESADO NO ES VALIDO'
+     END-IF
+     
+     IF NOT (#SEXO = 'M' OR = 'F')
+         REINPUT 'EL VALOR INGRESADO NO ES VALIDO'
+     END-IF
+     
+     INPUT NO ERASE
+     // 25T '/////////////////////////////////////////'          
+     // 25T '¿DESEA CONFIRMAR LA ACTUALIZACION? (S/N):' #CONF
+     // 25T '/////////////////////////////////////////'
+     
+     IF #CONF = 'S' OR #CONF = 's'
+         MOVE #APELLIDO TO VISTA-EMP.APELLIDO
+         MOVE #ESTADO TO VISTA-EMP.ESTADO-CIVIL
+         MOVE #SEXO TO VISTA-EMP.SEXO
+             UPDATE (F1.)
+         END TRANSACTION
+         WRITE 'EL REGISTRO SE HA ACTUALIZADO'
+    ELSE 
+        WRITE 'EL REGISTRO NO SE HA ACTUALIZADO'
+    END-IF
+     
+END-FIND
+
+IF *COUNTER(F1.) = 0
+    WRITE 'NO ENCONTRO REGISTROS'
+END-IF
+
+END-SUBROUTINE
+
+END

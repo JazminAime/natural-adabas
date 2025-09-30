@@ -1,0 +1,81 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+* MAP2: PROTOTYPE VERSION 820 --- CREATED BY ONE 9.3.1 ---
+* INPUT USING MAP 'XXXXXXXX'
+*     #APELLIDO #ESTADO-CIVIL #ID-EMPLEADO #MONEDA-NUEVO #MONEDA-ULT #NOMBRE
+*     #SALARIO-NUEVO #SALARIO-ULT #SEXO
+DEFINE DATA PARAMETER
+1 #APELLIDO (A020)
+1 #ESTADO-CIVIL (A001)
+1 #ID-EMPLEADO (A008)
+1 #MONEDA-NUEVO (A003)
+1 #MONEDA-ULT (A003)
+1 #NOMBRE (A020)
+1 #SALARIO-NUEVO (P09.0)
+1 #SALARIO-ULT (P09.0)
+1 #SEXO (A001)
+END-DEFINE
+FORMAT PS=024 LS=080 ZP=OFF SG=OFF KD=OFF IP=OFF
+* MAP2: MAP PROFILES *****************************        200***********
+* .TTAAAMMOO   D I D I N D I D I        ?_)^&:+(                       *
+* 024079        N0NNUCN             X        01 SYSPROF NR             *
+************************************************************************
+INPUT          (     IP=OFF                                           /*
+                                                                       )
+ 026T 'CONSULTA EMPLEADO'
+/
+/
+ 023T 'ID EMPLEADO'
+ 035T #ID-EMPLEADO /*.01U014 A008 .
+      (AD=ODT AL=014 )
+/
+/
+/
+ 007T 'NOMBRE'
+ 029T #NOMBRE /*.99U009 A020 .
+      (AD=MDT AL=009 )
+/
+ 007T 'APELLIDO'
+ 029T #APELLIDO /*.99U011 A020 .
+      (AD=MDT AL=011 )
+/
+ 007T 'ESTADO CIVIL'
+ 029T #ESTADO-CIVIL /*.99U015 A001 .
+      (AD=MDT AL=015 )
+/
+ 007T 'SEXO'
+ 029T #SEXO /*.99U007 A001 .
+      (AD=MDT AL=007 )
+/
+ 007T 'CODIGO MONEDA ACTUAL'
+ 029T #MONEDA-ULT /*.99U013 A003 .
+      (AD=MDT AL=013 )
+/
+ 007T 'SALARIO ACTUAL'
+ 029T #SALARIO-ULT /*.99U014 P09.0.
+      (AD=MDT NL=14.0 )
+/
+ 007T 'CODIGO MONEDA ULT'
+ 029T #MONEDA-NUEVO /*.99U015 A003 .
+      (AD=MDT AL=015 )
+/
+ 007T 'SALARIO ULT'
+ 029T #SALARIO-NUEVO /*.99U016 P09.0.
+      (AD=MDT NL=16.0 )
+/
+/
+/
+ 035T 'PF3 SALIR'
+/
+/
+/
+/
+/
+/
+/
+/
+* MAP2: VALIDATION *****************************************************
+* MAP2: END OF MAP *****************************************************
+END

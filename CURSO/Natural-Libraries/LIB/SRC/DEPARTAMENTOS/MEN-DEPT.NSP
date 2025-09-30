@@ -1,0 +1,32 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+    1 #OPCION (N01.0)
+END-DEFINE
+*
+SET KEY ALL
+*
+INPUT USING MAP  'M-DEPT'
+*
+IF *PF-KEY = 'PF3'
+    STOP  
+END-IF
+*
+IF *PF-KEY EQ 'ENTR'
+    DECIDE ON FIRST VALUE OF #OPCION 
+        VALUE 1 
+            FETCH 'ALTD1'
+        VALUE 2
+            WRITE 'BAJA DEPARTAMENTO'
+        VALUE 3
+            WRITE 'MODIFICACION DEPARTAMENTO'
+        VALUE 4
+            WRITE 'CONSULTA DEPARTAMENTO'
+        NONE VALUE
+            REINPUT 'OPCION INVALIDA'
+    END-DECIDE
+END-IF
+*
+END

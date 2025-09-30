@@ -1,0 +1,89 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMP VIEW OF EMPLOYEES
+  2 ID-EMPLEADO
+  2 NOMBRE
+  2 APELLIDO
+  2 ESTADO-CIVIL
+  2 SEXO
+  2 INGRESO-ANUAL
+      3 CODIGO-MONEDA        (1:20)
+      3 SALARIO-ANUAL        (1:20)
+1 #I                 (N2)
+1 #OCU               (N2)
+1 #APELLIDO (A020)
+1 #ESTADO-CIVIL (A001)
+1 #ID-EMPLEADO (A008)
+1 #MONEDA-NUEVO (A003)
+1 #MONEDA-ULT (A003)
+1 #NOMBRE (A020)
+1 #SALARIO-NUEVO (P09.0)
+1 #SALARIO-ULT (P09.0)
+1 #SEXO (A001)
+END-DEFINE
+
+SET KEY ALL
+
+REPEAT
+    INPUT 'INGRESE ID EMPLEADO: ' #ID-EMPLEADO
+    
+    DECIDE ON FIRST VALUE OF *PF-KEY
+        VALUE 'ENTR' 
+            IF #ID-EMPLEADO <> MASK(99999999)
+                REINPUT 'INGRESE SOLO VALORES NUMERICOS'
+            END-IF
+            
+            PERFORM PROCESO
+            
+            INPUT USING MAP 'MCON1'
+                DECIDE ON FIRST VALUE *PF-KEY
+                    VALUE 'PF3'
+                        ESCAPE BOTTOM
+                    NONE VALUE
+                        IGNORE
+                END-DECIDE
+                
+        VALUE 'PF3'
+            ESCAPE BOTTOM
+        NONE VALUE
+            REINPUT 'OPCION INVALIDA'
+    END-DECIDE
+    
+END-REPEAT
+
+DEFINE SUBROUTINE PROCESO
+    F1. FIND VISTA-EMP WITH ID-EMPLEADO = #ID-EMPLEADO
+        IF NO RECORDS FOUND
+            REINPUT 'NO HAY REGISTROS'
+        END-NOREC
+
+        PERFORM BUSCAR-ULTIMO-INDICE
+
+        MOVE VISTA-EMP.NOMBRE                     TO #NOMBRE
+        MOVE VISTA-EMP.APELLIDO                   TO #APELLIDO
+        MOVE VISTA-EMP.ESTADO-CIVIL               TO #ESTADO-CIVIL
+        MOVE VISTA-EMP.SEXO                       TO #SEXO
+        MOVE VISTA-EMP.CODIGO-MONEDA(#OCU - 1)    TO #MONEDA-ULT
+        MOVE VISTA-EMP.SALARIO-ANUAL(#OCU - 1)    TO #SALARIO-ULT
+        MOVE VISTA-EMP.CODIGO-MONEDA(#OCU)        TO #MONEDA-NUEVO
+        MOVE VISTA-EMP.SALARIO-ANUAL(#OCU)        TO #SALARIO-NUEVO 
+
+    END-FIND
+END-SUBROUTINE
+
+DEFINE SUBROUTINE BUSCAR-ULTIMO-INDICE
+    #OCU := 1
+    FOR #I = 1 TO 20
+        IF VISTA-EMP.SALARIO-ANUAL(#I) = 0 AND
+           VISTA-EMP.CODIGO-MONEDA(#I) = ' '
+            #OCU := #I
+            ESCAPE BOTTOM
+        END-IF
+    END-FOR
+    
+END-SUBROUTINE
+
+END

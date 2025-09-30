@@ -1,0 +1,33 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/** ENUNCIADO
+/** Pedir al usuario números enteros uno por uno
+/** Sumar todos los números ingresados 
+/** El ciclo se repite hasta que la suma supere 500
+/** Mostrar la cantidad de números ingresados y la suma total
+
+DEFINE DATA LOCAL
+    01 NUM        (N4)
+    01 SUMA        (N4)
+    01 ACUM        (N4)
+END-DEFINE
+
+SUMA := 0
+ACUM := 0 
+
+REPEAT
+    INPUT 'Ingrese un número: ' NUM
+    ADD 1 TO ACUM
+    ADD NUM TO SUMA
+    
+    IF SUMA > 500
+        WRITE 'La cantidad de números ingresados fue: ' ACUM
+        WRITE 'El total de la suma de los números fue: ' SUMA
+        WRITE 'Fin del programa. La suma superó 500.'
+        ESCAPE BOTTOM
+    END-IF
+END-REPEAT
+
+END

@@ -1,0 +1,20 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+    01 #VAR1 (N2)
+    01 #I (N2)
+END-DEFINE
+
+#VAR1 := 33
+
+FOR #I = 1 TO 10
+    ADD 1 TO #VAR1
+    WRITE '=' #VAR1
+    IF #VAR1 = 38
+        ESCAPE BOTTOM
+    END-IF
+END-FOR
+
+END

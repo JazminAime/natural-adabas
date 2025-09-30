@@ -1,0 +1,30 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+    1 #M-OPCION (N01.0)
+END-DEFINE
+*
+SET KEY ALL
+*
+INPUT USING MAP  'MMEN1'
+*
+IF *PF-KEY EQ 'ENTR'
+    DECIDE ON FIRST VALUE OF #M-OPCION 
+        VALUE 1 
+            FETCH 'CONSULT2' /* CONSULTA EMPLEADO
+        VALUE 2
+            FETCH 'ACTUALIZ' /* ACTUALIZACION MONEDA
+        VALUE 3
+            FETCH 'BAJAMON' /* ELIMINACION MONEDA
+        VALUE 4
+            FETCH 'ALTM1' /* ALTA MONEDA
+        VALUE 5
+            FETCH 'ALTD1' /* ALTA DEPARTAMENTO
+        NONE VALUE
+            REINPUT 'OPCION INVALIDA'
+    END-DECIDE
+END-IF
+*
+END

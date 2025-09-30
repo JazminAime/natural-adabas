@@ -1,0 +1,110 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMP VIEW OF EMPLOYEES
+  2 ID-EMPLEADO
+  2 NOMBRE
+  2 APELLIDO
+  2 ESTADO-CIVIL
+  2 SEXO
+  2 INGRESO-ANUAL
+      3 CODIGO-MONEDA        (1:20)
+      3 SALARIO-ANUAL        (1:20)
+
+1 #ID-EMPLEADO       (A08)
+1 #APELLIDO          (A20)
+1 #ESTADO            (A01)
+1 #SEXO              (A01)
+1 #CONF              (A01)
+1 #MONEDA-ULT        (A03)
+1 #SALARIO-ULT       (P09)
+1 #MONEDA-NUEVO      (A03)
+1 #SALARIO-NUEVO     (P09)
+1 #I                 (N2)
+1 #OCU               (N2)
+END-DEFINE
+
+DEFINE WINDOW AVISO
+    SIZE 7 * 50
+    BASE 10 / 30
+    FRAMED
+
+/******** CUERPO PRINCIPAL ********/
+REPEAT
+    PERFORM BUSCAR-EMP
+    PERFORM PROCESO
+END-REPEAT
+
+/******** SUBRUTINAS ********/
+DEFINE SUBROUTINE BUSCAR-EMP
+    INPUT 'INGRESE EMPLEADO: ' #ID-EMPLEADO
+    IF #ID-EMPLEADO <> MASK(99999999)
+        SET WINDOW 'AVISO'
+        REINPUT 'INGRESE SOLO VALORES NUMERICOS'
+        SET WINDOW OFF
+    END-IF
+END-SUBROUTINE
+
+DEFINE SUBROUTINE PROCESO
+    F1. FIND VISTA-EMP WITH ID-EMPLEADO = #ID-EMPLEADO
+        IF NO RECORDS FOUND
+            WRITE 'NO HAY REGISTROS'
+            ESCAPE BOTTOM
+        END-NOREC
+
+        PERFORM BUSCAR-ULTIMO-INDICE
+
+        MOVE VISTA-EMP.APELLIDO TO #APELLIDO
+        MOVE VISTA-EMP.ESTADO-CIVIL TO #ESTADO
+        MOVE VISTA-EMP.SEXO TO #SEXO
+        MOVE VISTA-EMP.CODIGO-MONEDA(#OCU - 1) TO #MONEDA-ULT
+        MOVE VISTA-EMP.SALARIO-ANUAL(#OCU - 1) TO #SALARIO-ULT
+
+        INPUT
+            'ID EMPLEADO........ '  #ID-EMPLEADO   (AD=O) /
+            'APELLIDO............ ' #APELLIDO      (AD=M) /
+            'ESTADO CIVIL........ ' #ESTADO        (AD=M) /
+            'SEXO................ ' #SEXO          (AD=M) /
+            'ULTIMO COD MONEDA... ' #MONEDA-ULT    (AD=M) /
+            'ULTIMO SALARIO...... ' #SALARIO-ULT   (AD=M) /
+            'NUEVO COD MONEDA.... ' #MONEDA-NUEVO  (AD=M) /
+            'NUEVO SALARIO....... ' #SALARIO-NUEVO (AD=M)
+
+        IF NOT (#ESTADO = 'M' OR #ESTADO = 'S' OR #ESTADO = 'D' OR #ESTADO = 'W')
+            REINPUT 'ESTADO CIVIL INVÁLIDO'
+        END-IF
+        IF NOT (#SEXO = 'M' OR #SEXO = 'F')
+            REINPUT 'SEXO INVÁLIDO'
+        END-IF
+
+        SET WINDOW 'AVISO'
+            INPUT / 'CONFIRMAR ACTUALIZACION (S/N):' #CONF
+        SET WINDOW OFF
+
+        IF #CONF = 'S' OR #CONF = 's'
+            MOVE #MONEDA-NUEVO TO VISTA-EMP.CODIGO-MONEDA(#OCU)
+            MOVE #SALARIO-NUEVO TO VISTA-EMP.SALARIO-ANUAL(#OCU)
+            UPDATE (F1.)
+            END TRANSACTION
+            WRITE 'REGISTRO ACTUALIZADO'
+        ELSE
+            WRITE 'REGISTRO NO ACTUALIZADO'
+        END-IF
+
+    END-FIND
+END-SUBROUTINE
+
+DEFINE SUBROUTINE BUSCAR-ULTIMO-INDICE
+    #OCU := 1
+    FOR #I = 1 TO 20
+        IF VISTA-EMP.SALARIO-ANUAL(#I) = 0
+            #OCU := #I
+            ESCAPE BOTTOM
+        END-IF
+    END-FOR
+    
+END-SUBROUTINE
+
+END

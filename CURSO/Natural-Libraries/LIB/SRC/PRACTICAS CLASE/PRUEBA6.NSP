@@ -1,0 +1,48 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/** ENUNCIADO
+/** Pedir al usuario que ingrese 5 notas (valores del 1 al 10) en un vector
+/** Si alguna nota es menor a 4, mostrar "Hay notas desaprobadas"
+/** Calcular el promedio y mostrarlo
+/** Repetir todo el proceso hasta que el promedio sea mayor o igual a 7
+
+DEFINE DATA LOCAL
+    01 I                (N2)
+    01 VECTOR             (N2/5)
+    01 PROMEDIO            (N4)
+    01 SUMA                (N4)
+    01 DESAPROBADO        (L)
+END-DEFINE
+
+PROMEDIO := 0
+
+REPEAT SUMA := 0
+DESAPROBADO := FALSE
+
+FOR I 1 TO 5 
+    INPUT 'Ingrese nota:' VECTOR(I)
+    IF VECTOR(I) < 4
+        DESAPROBADO := TRUE
+    END-IF
+    ADD VECTOR(I) TO SUMA
+END-FOR
+
+PROMEDIO := SUMA / 5
+
+IF DESAPROBADO = TRUE
+    WRITE 'Hay notas desaprobadas.'
+ELSE
+    WRITE 'No hay notas desaprobadas.'
+END-IF
+
+WRITE 'Promedio:' PROMEDIO
+
+IF PROMEDIO >= 7
+    WRITE 'El promedio es mayor o igual a 7. Fin del programa.'
+    ESCAPE BOTTOM
+END-IF
+END-REPEAT
+
+END

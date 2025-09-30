@@ -1,0 +1,64 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMP VIEW OF EMPLOYEES
+  2 ID-EMPLEADO
+  2 NOMBRE
+  2 APELLIDO
+  2 ESTADO-CIVIL
+  2 SEXO
+/** M - CASADO | S - SOLTERO | D - DIVORCIADO | W - VIUDO
+/** SEXO (M - F)
+
+/** variable del programa
+1 CONTADOR-M     (N4)
+1 CONTADOR-F     (N4)
+1 TOTAL-GRAL    (N4)
+1 GENERO        (A20)
+END-DEFINE
+
+/** READ VISTA-EMP  BY ISN = 900 THRU 1000
+/** READ VISTA-EMP  BY ISN = 900 
+    /** IF *ISN > 1000
+       /**  ESCAPE BOTTOM
+     /** END-IF
+     
+/** READ VISTA-EMP BY ID-EMPLEADO = 11300324
+/** READ VISTA-EMP BY ID-EMPLEADO STARTING FROM 11300324
+
+/** READ VISTA-EMP BY ID-EMPLEADO STARTING FROM 20012750
+
+READ VISTA-EMP BY ID-EMPLEADO = '11300301' ENDING AT '11300320'
+    /**IF NOMBRE = 'LAURA'
+    /**IF ESTADO-CIVIL = 'M' OR ESTADO-CIVIL = 'S'
+    IF ESTADO-CIVIL = 'D'
+           IF SEXO = 'M'
+                 GENERO := 'MASCULINO'
+              ADD 1 TO CONTADOR-M
+            ELSE
+              ADD 1 TO CONTADOR-F
+              GENERO := 'FEMENINO'
+           END-IF
+           
+           DISPLAY 'VALOR ISN'      *ISN
+                 /**'ID'             VISTA-EMP.ID-EMPLEADO
+                /** 'NOM'            VISTA-EMP.NOMBRE
+                 'APE'            VISTA-EMP.APELLIDO
+                 'EST-CIV'        VISTA-EMP.ESTADO-CIVIL
+                 'SEXO'           VISTA-EMP.SEXO
+                 'GEN'            GENERO
+    END-IF
+END-READ
+
+COMPUTE TOTAL-GRAL = CONTADOR-M + CONTADOR-F
+
+NEWPAGE
+WRITE '|********************************************|'
+WRITE 'TOTAL MASCULINOS:' CONTADOR-M
+WRITE 'TOTAL FEMENINOS:' CONTADOR-F
+WRITE 'TOTAL GENERAL:' TOTAL-GRAL
+WRITE '|********************************************|'
+
+END
