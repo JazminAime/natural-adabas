@@ -21,7 +21,7 @@ IF *PF-KEY EQ 'ENTR'
         VALUE 2
             FETCH 'BAJAMON2'
         VALUE 3
-            WRITE 'MODIFICACION MONEDAS'
+            FETCH 'MODI_MON'
         VALUE 4
             FETCH 'LIST-MON'
         NONE VALUE

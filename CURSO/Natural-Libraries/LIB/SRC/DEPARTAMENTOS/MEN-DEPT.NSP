@@ -19,7 +19,7 @@ IF *PF-KEY EQ 'ENTR'
         VALUE 1 
             FETCH 'ALTD1'
         VALUE 2
-            WRITE 'BAJA DEPARTAMENTO'
+            FETCH 'BAJA_DEP'
         VALUE 3
             WRITE 'MODIFICACION DEPARTAMENTO'
         VALUE 4

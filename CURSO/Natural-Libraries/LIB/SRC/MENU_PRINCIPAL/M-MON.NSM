@@ -42,8 +42,7 @@ INPUT          (     IP=OFF                                           /*
 /
 /
  009T 'ENTER-VALIDAR'
- 027T 'PF3-SALIR'
- 041T 'PF5-VOLVER AL MENÚ P.'
+ 030T 'PF3-SALIR'
 /
 /
 /
