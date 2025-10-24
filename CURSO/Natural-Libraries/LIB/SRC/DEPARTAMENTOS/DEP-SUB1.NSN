@@ -1,0 +1,54 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/* Subprograma de Departamentos.
+DEFINE DATA PARAMETER
+   /* 1 #COD-DEPT-P        (A06) /* PARAMETRO ENTRADA
+   /* 1 #DESC-P            (A30) /* PARAMETRO SALIDA
+   /* 1 #COD-RETORNO-P     (N01) /* PARAMETRO SALIDA
+                               /* 1 - ENCONTRÓ REGISTRO
+                               /* 2 - NO ENCONTRÓ REGISTRO
+USING PA-SUB1
+                              
+LOCAL
+    1 VISTA-DEPT VIEW OF DEPARTAMENTOS
+        2 COD-DEPT 
+        2 DESC
+*
+END-DEFINE
+*
+* ---- MAIN ----
+*
+*
+RESET #DESC-P #COD-RETORNO-P
+PERFORM VALIDAR-EXISTENCIA
+*
+*
+* ---- SUBRUTINAS ----
+*
+*
+DEFINE SUBROUTINE VALIDAR-EXISTENCIA
+    FIND VISTA-DEPT WITH VISTA-DEPT.COD-DEPT = #COD-DEPT-P
+        IF NO RECORD FOUND
+            MOVE 2           TO #COD-RETORNO-P
+            ESCAPE BOTTOM
+        END-NOREC
+        MOVE 1               TO #COD-RETORNO-P    
+        MOVE VISTA-DEPT.DESC TO #DESC-P
+    END-FIND
+END-SUBROUTINE
+*
+DEFINE SUBROUTINE VALIDAR-EXISTENCIA-2
+FIND VISTA-DEPT WITH VISTA-DEPT.COD-DEPT = #COD-DEPT-P
+        MOVE 1               TO #COD-RETORNO-P    
+        MOVE VISTA-DEPT.DESC TO #DESC-P
+    END-FIND
+*
+    IF *COUNTER(0043) EQ 0
+        MOVE 2           TO #COD-RETORNO-P
+    END-IF
+*
+END-SUBROUTINE
+*
+END

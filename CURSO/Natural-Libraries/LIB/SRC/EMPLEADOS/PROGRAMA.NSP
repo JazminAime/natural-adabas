@@ -1,0 +1,140 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+  1 VISTA-EMP VIEW OF EMPLOYEES
+    2 ID-EMPLEADO                 (A08)          /* DESCRIPTOR
+    2 NOMBRE-COMPLETO
+      3 NOMBRE                    (A20)
+      3 APELLIDO                  (A20)          /* DESCRIPTOR
+*
+    2 ESTADO-CIVIL                (A01)
+    /* M=MARRIED  (CASADO/A)
+    /* S=SINGLE   (SOLTERO/A)
+    /* D=DIVORCED (DIVORCIADO/A)
+    /* W=WIDOWED  (VIUDO/A)
+*
+    2 SEXO                        (A01)
+    /* M=MALE     (MASCULINO)
+    /* F=FEMALE   (FEMENINO)
+*
+    2 INGRESO-ANUAL
+      3 CODIGO-MONEDA             (1:10)
+      3 SALARIO-ANUAL             (1:10)
+*
+  1 #ID-EMPL (A08)
+*
+  1 #APELLIDO (A020/00001:00010)
+  1 #ID-EMPLEADO (A008/00001:00010)
+  1 #NOMBRE (A020/00001:00010)
+*  
+  1 #APELLIDO-V (A020/00001:000100)
+  1 #ID-EMPLEADO-V (A008/00001:000100)
+  1 #NOMBRE-V (A020/00001:000100)
+  
+  1 #I (N03)
+  1 #J (N03)
+*
+  1 #DESDE (N03) INIT <1>
+  1 #HASTA (N03) INIT <10>
+  1 #HASTA-MAX (N03)
+  
+END-DEFINE
+*
+/*-------------------- MAIN -----------------------------------------*/
+*
+SET KEY ALL
+
+INPUT 'INGRESE ID EMPLEADO A CONSULTAR: ' #ID-EMPL
+*
+DECIDE ON FIRST VALUE OF *PF-KEY
+*
+  VALUE 'ENTR'
+*  
+    IF #ID-EMPL NE MASK(99999999)
+      REINPUT 'INGRESE UN ID DE EMPLEADO VÁLIDO'
+    END-IF
+*    
+    PERFORM CARGAR-VECTORES-TABLA
+    PERFORM CARGAR-MAPA
+*    
+    REPEAT
+      INPUT USING MAP 'MAP-ARRA'
+      DECIDE ON FIRST VALUE OF *PF-KEY
+*     
+        VALUE 'PF3'
+          WRITE '=' *PROGRAM
+          ESCAPE BOTTOM
+*        
+        VALUE 'PF7'
+          IF #DESDE EQ 1
+            REINPUT 'PRIMER PANTALLA'
+          ELSE
+            #DESDE := #DESDE - 10
+            #HASTA := #HASTA - 10
+*            WRITE '=' #DESDE /
+*                  '=' #HASTA
+                  
+            PERFORM CARGAR-MAPA
+          END-IF
+          
+        VALUE 'PF8'
+
+          IF #HASTA >= #HASTA-MAX
+            REINPUT 'ULTIMA PANTALLA'
+          ELSE
+            #DESDE := #DESDE + 10
+            #HASTA := #HASTA + 10
+*            WRITE '=' #DESDE /
+*                  '=' #HASTA
+                  
+            PERFORM CARGAR-MAPA
+          END-IF
+          
+        NONE VALUE
+          IGNORE
+        END-DECIDE
+    END-REPEAT
+*    
+  VALUE 'PF3'
+    ESCAPE BOTTOM
+*  
+  NONE VALUE
+    REINPUT 'OPCIÓN INCORRECTA'
+END-DECIDE
+
+FETCH 'MAP-ARRA'
+*
+/*-------------------- SUBRUTINAS -----------------------------------*/
+*
+*********************************************
+* SUBRUTINA CARGAR-VECTORES-TABLA
+********************************************
+DEFINE SUBROUTINE CARGAR-VECTORES-TABLA                
+*
+  READ VISTA-EMP BY VISTA-EMP.ID-EMPLEADO = #ID-EMPL  
+    ADD 1 TO #I
+    MOVE VISTA-EMP.ID-EMPLEADO           TO #ID-EMPLEADO-V(#I)
+    MOVE VISTA-EMP.NOMBRE                TO #NOMBRE-V(#I)
+    MOVE VISTA-EMP.APELLIDO              TO #APELLIDO-V(#I)
+*
+    IF #I EQ 100
+      ESCAPE BOTTOM
+    END-IF
+*
+  END-READ
+  MOVE #I TO #HASTA-MAX
+END-SUBROUTINE
+*
+DEFINE SUBROUTINE CARGAR-MAPA
+  RESET #J
+  FOR #I = #DESDE TO #HASTA
+    ADD 1 TO #J
+    MOVE #ID-EMPLEADO-V(#I) TO #ID-EMPLEADO(#J)
+    MOVE #NOMBRE-V(#I)      TO #NOMBRE(#J)
+    MOVE #APELLIDO-V(#I)    TO #APELLIDO(#J)
+  END-FOR
+END-SUBROUTINE
+*
+END

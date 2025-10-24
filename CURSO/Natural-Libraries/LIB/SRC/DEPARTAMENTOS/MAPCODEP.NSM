@@ -1,0 +1,81 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+* MAP2: PROTOTYPE VERSION 820 --- CREATED BY ONE 9.3.1 ---
+* INPUT USING MAP 'XXXXXXXX'
+*     #COD-DEP-M(*) #DESC-M(*) #SEL-M(*)
+DEFINE DATA PARAMETER
+1 #COD-DEP-M (A006/00001:00005)
+1 #DESC-M (A030/00001:00005)
+1 #SEL-M (A001/00001:00005)
+END-DEFINE
+FORMAT PS=024 LS=080 ZP=OFF SG=OFF KD=OFF IP=OFF
+* MAP2: MAP PROFILES *****************************        200***********
+* .TTAAAMMOO   D I D I N D I D I        ?_)^&:+(                       *
+* 024079        N0NNUCN             X        01 SYSPROF NR             *
+************************************************************************
+INPUT          (     IP=OFF                                           /*
+                                                                       )
+/
+ 002T 'SEL'
+ 006T 'COD-DEP'
+ 014T 'DESCRIPCIÒN'
+/
+/
+ 003T #SEL-M (1) /*.99U001 A001 .
+      (AD=MDT )
+   /**A1000050000100001000010000100001100005001001000001000HV
+ 006T #COD-DEP-M (1) /*.99U006 A006 .
+      (AD=MDT )
+   /**A1000050000100001000010000100001100005001001000001000HV
+ 014T #DESC-M (1) /*.99U030 A030 .
+      (AD=MDT )
+   /**A1000050000100001000010000100001100005001001000001000HV
+/
+ 003T #SEL-M (2) /*.99U001 A001 .
+      (AD=MDT )
+ 006T #COD-DEP-M (2) /*.99U006 A006 .
+      (AD=MDT )
+ 014T #DESC-M (2) /*.99U030 A030 .
+      (AD=MDT )
+/
+ 003T #SEL-M (3) /*.99U001 A001 .
+      (AD=MDT )
+ 006T #COD-DEP-M (3) /*.99U006 A006 .
+      (AD=MDT )
+ 014T #DESC-M (3) /*.99U030 A030 .
+      (AD=MDT )
+/
+ 003T #SEL-M (4) /*.99U001 A001 .
+      (AD=MDT )
+ 006T #COD-DEP-M (4) /*.99U006 A006 .
+      (AD=MDT )
+ 014T #DESC-M (4) /*.99U030 A030 .
+      (AD=MDT )
+/
+ 003T #SEL-M (5) /*.99U001 A001 .
+      (AD=MDT )
+ 006T #COD-DEP-M (5) /*.99U006 A006 .
+      (AD=MDT )
+ 014T #DESC-M (5) /*.99U030 A030 .
+      (AD=MDT )
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+/
+* MAP2: VALIDATION *****************************************************
+* MAP2: END OF MAP *****************************************************
+END

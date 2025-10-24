@@ -1,0 +1,18 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/* Programa llamador al subprograma DEP-SUB1
+DEFINE DATA LOCAL
+    1 #COD-DEPT-P        (A06) /* PARAMETRO ENTRADA
+    1 #DESC-P            (A30) /* PARAMETRO SALIDA
+    1 #COD-RETORNO-P     (N01) /* PARAMETRO SALIDA
+                               /* 1 - ENCONTRÓ REGISTRO
+                               /* 2 - NO ENCONTRÓ REGISTRO
+END-DEFINE
+*
+INPUT 'INGRESE EL CODIGO DEL DEPARTAMENTO:' #COD-DEPT-P
+CALLNAT 'DEP-SUB1' #COD-DEPT-P #DESC-P #COD-RETORNO-P
+WRITE '=' #COD-DEPT-P '=' #DESC-P '=' #COD-RETORNO-P
+*
+END
