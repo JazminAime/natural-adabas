@@ -1,0 +1,58 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMPLEADO VIEW OF EMPLOYEES
+    2 ID-EMPLEADO
+    2 NOMBRE
+    2 APELLIDO
+    2 ESTADO-CIVIL
+    2 SEXO
+    2 INGRESO-ANUAL
+        3 CODIGO-MONEDA     (1:2)
+        3 SALARIO-ANUAL     (1:2) 
+        3 BONUS             (1, 1)
+    2 DEPARTAMENTO
+    2 PROFESION
+*
+ 1 #REG-ENTRADA
+     2 #ID-EMPLEADO        (A08)
+     2 #SALARIO            (P09)
+     2 #DEPARTAMENTO       (A06)
+     2 #PROFESION          (A25)
+*
+ 1 #TOT                 (N02)
+ 1 #ENC                 (N02)
+ 1 #NO-ENC              (N02)
+*
+END-DEFINE
+*
+DEFINE WORK FILE 1 '/home/WF/EMPLEWF.csv' TYPE 'CSV'
+*
+READ WORK FILE 1 #REG-ENTRADA
+  ADD 1 TO #TOT
+  FE. FIND VISTA-EMPLEADO WITH VISTA-EMPLEADO.ID-EMPLEADO = #ID-EMPLEADO
+       IF NO RECORDS FOUND
+           ADD 1 TO #NO-ENC
+           WRITE 'EL REGISTRO NO SE ENCONTRÓ' #ID-EMPLEADO
+           ESCAPE BOTTOM
+       END-NOREC
+           ADD 1 TO #ENC
+           WRITE 'EL EMPLEADO YA EXISTE' #ID-EMPLEADO
+           MOVE #SALARIO         TO VISTA-EMPLEADO.SALARIO-ANUAL(1)
+           MOVE #DEPARTAMENTO    TO VISTA-EMPLEADO.DEPARTAMENTO
+           MOVE #PROFESION       TO VISTA-EMPLEADO.PROFESION
+           UPDATE (FE.)
+           END TRANSACTION
+  END-FIND
+*   
+END-WORK
+*
+WRITE 'LEIDOS DEL WF'               #TOT /
+      'REGISTROS ENCONTRADOS'       #ENC /
+      'REGISTROS NO ENCONTRADOS'    #NO-ENC
+*
+CLOSE WORK FILE 1
+*
+END

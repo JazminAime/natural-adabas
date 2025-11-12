@@ -1,0 +1,62 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMPLEADO VIEW OF EMPLOYEES
+    2 ID-EMPLEADO
+    2 NOMBRE 
+    2 APELLIDO
+    2 ESTADO-CIVIL
+    2 SEXO
+    2 INGRESO-ANUAL /* EMPAQUETADO 9
+        3 CODIGO-MONEDA (8)
+        3 SALARIO-ANUAL (8)
+        3 BONUS (1:8, 1:8)
+    2 DEPARTAMENTO
+    2 PROFESION
+*
+1 #REG-ENTRADA
+  2 #ID-EMPLEADO             (A08)
+  2 #SALARIO                 (P09)
+  2 #DEPARTAMENTO            (A06)
+  2 #PROFESION               (A25)
+  2 REDEFINE #PROFESION
+      3 #PROFESION-10        (A10)
+      3 #PROFESION-15        (A15)
+  2 #NOMBRE                  (A20)
+  2 REDEFINE #NOMBRE
+      3 #NOMBRE-10           (A10)
+      3 NOMBRE-15            (A10)
+  2 #APELLIDO                (A20)
+  2 REDEFINE #APELLIDO
+      3 #APELLIDO-10         (A10)
+      3 #APELLIDO-15         (A10)
+  2 #SEXO                    (A01)
+  2 #ESTADO-CIVIL            (A01)
+*
+1 #CONT-NO-ENCONTRADO        (N02)
+1 #CONT-ENCONTRADO           (N02)
+1 #LEIDOS                    (N02)
+*
+END-DEFINE
+*
+DEFINE WORK FILE 1 '/home/WF/EMPLEWF2.csv' TYPE 'CSV'
+*
+READ WORK FILE 1 #REG-ENTRADA
+   /*FIND VISTA-EMPLEADO WITH VISTA-EMPLEADO.ID-EMPLEADO = #ID-EMPLEADO
+   DISPLAY 'ID-EMP'         #ID-EMPLEADO
+           'NOMB'           #NOMBRE-10
+           'APE'            #APELLIDO-10
+           'PROF'           #PROFESION-10
+           'SALAR'          #SALARIO
+           'DEPT'           #DEPARTAMENTO
+           'SEXO'           #SEXO
+           'EST. C'         #ESTADO-CIVIL
+   /*END-FIND
+*
+END-WORK
+*
+CLOSE WORK FILE 1
+*
+END

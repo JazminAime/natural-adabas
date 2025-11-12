@@ -1,0 +1,123 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMPLEADO VIEW OF EMPLOYEES
+    2 ID-EMPLEADO
+    2 NOMBRE 
+    2 APELLIDO
+    2 ESTADO-CIVIL
+    2 SEXO
+    2 INGRESO-ANUAL /* EMPAQUETADO 9
+        3 CODIGO-MONEDA (1:2)
+        3 SALARIO-ANUAL (1:2)
+        3 BONUS (1:1, 1:1)
+    2 DEPARTAMENTO
+    2 PROFESION
+*
+1 #REG-ENTRADA
+  2 #ID-EMPLEADO             (A08)
+  2 #SALARIO                 (P09)
+  2 #DEPARTAMENTO            (A06)
+  2 #PROFESION               (A25)
+  2 REDEFINE #PROFESION
+      3 #PROFESION-10        (A10)
+      3 #PROFESION-15        (A15)
+  2 #NOMBRE                  (A20)
+  2 REDEFINE #NOMBRE
+      3 #NOMBRE-10           (A10)
+      3 NOMBRE-15            (A10)
+  2 #APELLIDO                (A20)
+  2 REDEFINE #APELLIDO
+      3 #APELLIDO-10         (A10)
+      3 #APELLIDO-15         (A10)
+  2 #SEXO                    (A01)
+  2 #ESTADO-CIVIL            (A01)
+*
+1 #CONT-ENCONTRADO           (N04)
+1 #CONT-NO-ENCONTRADO        (N04)
+1 #LEIDOS                    (N04)
+1 #ERROR                     (L)
+1 #REG-ENCONTRADO            (L)
+END-DEFINE
+*
+DEFINE WORK FILE 1 '/home/WF/EMPLEWF3.csv' TYPE 'CSV'
+*
+* ------------------------------------------------------
+*   MAIN
+* ------------------------------------------------------
+
+READ WORK FILE 1 #REG-ENTRADA
+    ADD 1 TO #LEIDOS
+    RESET #ERROR
+
+    PERFORM EXISTE-EMPLEADO
+
+    IF NOT #REG-ENCONTRADO
+        PERFORM VALIDAR-EMPLEADO
+        IF NOT #ERROR
+            PERFORM CARGAR-EMPLEADO
+        END-IF
+    END-IF
+END-WORK
+
+CLOSE WORK FILE 1
+
+PERFORM MOSTRAR-RESUMEN
+*
+* ------------------------------------------------------
+*   SUBRUTINAS
+* ------------------------------------------------------
+
+* -------- EXISTE-EMPLEADO --------
+DEFINE SUBROUTINE EXISTE-EMPLEADO
+    FIND VISTA-EMPLEADO WITH ID-EMPLEADO = #ID-EMPLEADO
+        MOVE TRUE TO #REG-ENCONTRADO
+        ADD 1 TO #CONT-ENCONTRADO
+        WRITE 'YA EXISTE EL EMPLEADO:' #ID-EMPLEADO
+    END-FIND
+END-SUBROUTINE
+*
+* -------- VALIDAR-EMPLEADO --------
+DEFINE SUBROUTINE VALIDAR-EMPLEADO
+    IF NOT (#SEXO = 'M' OR #SEXO = 'F')
+        WRITE 'ERROR SEXO INVALIDO EN:' #ID-EMPLEADO
+        MOVE TRUE TO #ERROR
+    END-IF
+
+    IF NOT (#ESTADO-CIVIL = 'S' OR #ESTADO-CIVIL = 'M' OR #ESTADO-CIVIL = 'D' OR #ESTADO-CIVIL = 'W')
+        WRITE 'ERROR ESTADO CIVIL INVALIDO EN:' #ID-EMPLEADO
+        MOVE TRUE TO #ERROR
+    END-IF
+END-SUBROUTINE
+*
+* -------- CARGAR-EMPLEADO --------
+DEFINE SUBROUTINE CARGAR-EMPLEADO
+    MOVE #ID-EMPLEADO     TO VISTA-EMPLEADO.ID-EMPLEADO
+    MOVE #NOMBRE          TO VISTA-EMPLEADO.NOMBRE
+    MOVE #APELLIDO        TO VISTA-EMPLEADO.APELLIDO
+    MOVE #PROFESION       TO VISTA-EMPLEADO.PROFESION
+    MOVE #DEPARTAMENTO    TO VISTA-EMPLEADO.DEPARTAMENTO
+    MOVE #SEXO            TO VISTA-EMPLEADO.SEXO
+    MOVE #ESTADO-CIVIL    TO VISTA-EMPLEADO.ESTADO-CIVIL
+    MOVE #SALARIO         TO VISTA-EMPLEADO.SALARIO-ANUAL(2)
+
+    STORE VISTA-EMPLEADO
+    END TRANSACTION
+    ADD 1 TO #CONT-NO-ENCONTRADO
+    WRITE 'NUEVO EMPLEADO AGREGADO:' #ID-EMPLEADO
+END-SUBROUTINE
+*
+* -------- MOSTRAR-RESUMEN --------
+DEFINE SUBROUTINE MOSTRAR-RESUMEN
+    WRITE '--------------------------------------'
+    WRITE 'RESUMEN FINAL DE CARGA'
+    WRITE '--------------------------------------'
+    WRITE 'TOTAL LEIDOS..........:' #LEIDOS
+    WRITE 'YA EXISTIAN...........:' #CONT-ENCONTRADO
+    WRITE 'NUEVOS AGREGADOS......:' #CONT-NO-ENCONTRADO
+    WRITE '--------------------------------------'
+END-SUBROUTINE
+*
+END

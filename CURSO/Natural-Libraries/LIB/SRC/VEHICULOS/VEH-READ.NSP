@@ -1,0 +1,31 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VEHIC-VISTA VIEW OF VEC-V
+    2 PATENTE                    (A15)
+    2 NUMERO-CHASIS              (B04)
+    2 ID-EMPLEADO                (A08)
+    2 VEHICULO
+        3 MARCA                  (A20)
+        3 MODELO                 (A20)
+        3 COLOR                  (A10)
+    2 ANIO                       (N04)
+    2 CLASE                      (A01)
+    2 ARRENDAMIENTO-COMPRA       (A01)
+    2 FECHA-ALTA-VEHICULO        (N08)
+    2 COSTO
+        3 CODIGO-MONEDA          (A03)
+        3 COSTO-MANTENIMIENTO    (1:1)
+END-DEFINE
+*
+READ VEHIC-VISTA BY PATENTE
+    DISPLAY VEHIC-VISTA.PATENTE
+            VEHIC-VISTA.NUMERO-CHASIS
+            VEHIC-VISTA.ID-EMPLEADO
+            VEHIC-VISTA.MARCA
+            VEHIC-VISTA.CODIGO-MONEDA            
+END-READ
+*
+END

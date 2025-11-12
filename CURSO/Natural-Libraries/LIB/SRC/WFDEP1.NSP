@@ -1,0 +1,43 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/* ES UN PROGRAMA QUE PERMITE LEER UN WORKFILE DE DEPTS
+DEFINE DATA LOCAL
+ 1 #REG-ENTRADA
+     2 #COD-DEPT        (A06)
+     2 #DESC            (A30)
+ 1 #TOT                 (N02)
+END-DEFINE
+*
+DEFINE WORK FILE 1 '/home/WF/DEP.csv' TYPE 'CSV'
+*
+READ WORK FILE 1 #REG-ENTRADA
+    /*DISPLAY 'CÓDIGO DEPT:'    #COD-DEPT
+            /*'DESCRIPCIÓN:'    #DESC
+    /*IF #COD-DEPT GE 'COMP26' AND #COD-DEPT LE 'COMP33'
+        /*DISPLAY 'CÓDIGO DEPT:'    #COD-DEPT
+                /*'DESCRIPCIÓN:'    #DESC
+    /*END-IF
+    /*ADD 1 TO #TOT
+    /*IF #COD-DEPT EQ 'COMP26'
+        /*DISPLAY 'CÓDIGO DEPT:'    #COD-DEPT
+                /*'DESCRIPCIÓN:'    #DESC
+        /*ESCAPE BOTTOM
+    /*END-IF
+    /*IF #COD-DEPT NE 'COMP26'
+        /*DISPLAY 'CÓDIGO DEPT:'    #COD-DEPT
+                /*'DESCRIPCIÓN:'    #DESC
+    /*END-IF
+    IF #COD-DEPT EQ 'COMP26'
+        ESCAPE TOP    
+    END-IF
+    DISPLAY 'CÓDIGO DEPT:'    #COD-DEPT
+            'DESCRIPCIÓN:'    #DESC
+END-WORK
+*
+/*WRITE #TOT
+*
+CLOSE WORK FILE 1
+*
+END

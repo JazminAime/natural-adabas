@@ -1,0 +1,53 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+DEFINE DATA LOCAL
+1 VISTA-EMP VIEW OF EMPLOYEES
+  2 ID-EMPLEADO             (A08)
+  2 APELLIDO                (A20)
+  2 DEPARTAMENTO            (A06)
+*  
+  2 SP-DEPT-EMPL            (A26)
+*  
+1 #SP-DEPT-EMPL             (A26)
+1 REDEFINE #SP-DEPT-EMPL
+    2 #APELLIDO             (A20)
+    2 #DEPARTAMENTO         (A06)
+*
+1 #TOT-DEPT                 (N5)
+1 #TOT-GENERAL              (N5)
+1 #LEIDOS                   (N5)
+
+1 #DEPT-ANT                 (A6)
+END-DEFINE
+*
+INPUT 'INGRESE CODIGO DEPARTAMENTO:' #DEPARTAMENTO
+*
+/*READ VISTA-EMP BY SP-DEPT-EMPL
+READ VISTA-EMP BY SP-DEPT-EMPL STARTING FROM #SP-DEPT-EMPL 
+    ADD 1 TO #LEIDOS
+    
+    IF #LEIDOS EQ 1
+        #DEPT-ANT := VISTA-EMP.DEPARTAMENTO
+    END-IF 
+*
+    IF VISTA-EMP.DEPARTAMENTO NE                 #DEPT-ANT
+    
+        WRITE   'DEPT.....................: '    #DEPT-ANT /
+                'TOTAL POR DEPARTAMENTO...: '    #TOT-DEPT /
+                'TOTAL PARCIAL............: '    #TOT-GENERAL
+        
+        NEWPAGE
+        #DEPT-ANT := VISTA-EMP.DEPARTAMENTO
+        RESET #TOT-DEPT
+    END-IF
+*
+    ADD 1 TO #TOT-GENERAL
+    ADD 1 TO #TOT-DEPT
+    DISPLAY 'DEPARTAMENTO:'     VISTA-EMP.DEPARTAMENTO
+            'APELLIDO:'         VISTA-EMP.APELLIDO 
+            'ID-EMPLEADO:'      VISTA-EMP.ID-EMPLEADO
+END-READ
+*
+END
